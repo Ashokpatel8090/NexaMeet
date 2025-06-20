@@ -3,11 +3,17 @@ import { createServer } from "node:http";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import cors from "cors";
+import dotenv from "dotenv";
 import { connectToSocket } from "./controllers/socketManager.js";
 import userRoutes from "./routes/userRoutes.js";
+import path from 'path'
+
+dotenv.config();
 
 const app = express();
 const server = createServer(app);
+
+const _dirname = path.resolve();
 
 
 
@@ -24,11 +30,16 @@ app.use(express.urlencoded({ limit: "40kb", extended: true }));
 
 app.use("/api/v1/users", userRoutes);
 
+app.use(express.static(path.join(_dirname, '/frontend/dist')));
+app.get('*', (_, res) => {
+    res.sendFile(path.resolve(_dirname, 'frontend', 'dist', 'index.html'))
+})
+
 // MongoDB Connection
 const start = async () => {
     try {
         const connectionDb = await mongoose.connect(
-            "mongodb+srv://apraj8810:Apraj__8090@cluster0.omzzsao.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+            process.env.MONGO_URL,
             {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
