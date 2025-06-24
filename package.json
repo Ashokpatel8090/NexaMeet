@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon Backend/src/app.js",
     "start": "node Backend/src/app.js",
-    "build": "npm install ; npm install --prefix frontend ; npm run build --prefix frontend"
+    "build": "cd frontend && npm install && chmod +x ./node_modules/.bin/vite && npm run build"
+
   },
   "author": "shubhanshu",
   "license": "ISC",
